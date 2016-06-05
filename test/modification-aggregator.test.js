@@ -23,6 +23,14 @@ describe('ModificationAggregator', function() {
       it('adds the set update', function() {
         expect(aggregator.sets).to.deep.equal({ loc: 'London' });
       });
+
+      it('updates the current copy', function() {
+        expect(aggregator.current.loc).to.equal('London');
+      });
+
+      it('does not modify the original', function() {
+        expect(aggregator.original.loc).to.equal(undefined);
+      });
     });
 
     context('when adding an element with an existing name', function() {
@@ -64,6 +72,62 @@ describe('ModificationAggregator', function() {
             done();
           });
         });
+      });
+    });
+  });
+
+  describe('#update', function() {
+    context('when the updated value is the same', function() {
+      var aggregator = new ModificationAggregator(doc);
+
+      before(function(done) {
+        aggregator.update('label', 'Warp', done);
+      });
+
+      it('makes no modifications', function() {
+        expect(aggregator.sets).to.deep.equal({});
+      });
+    });
+
+    context('when the updated value is different', function() {
+      var aggregator = new ModificationAggregator(doc);
+
+      before(function(done) {
+        aggregator.update('label', 'Ninja Tune', done);
+      });
+
+      it('adds the set update', function() {
+        expect(aggregator.sets).to.deep.equal({ label: 'Ninja Tune' });
+      });
+
+      it('updates the current copy', function() {
+        expect(aggregator.current.label).to.equal('Ninja Tune');
+      });
+
+      it('does not modify the original', function() {
+        expect(aggregator.original.label).to.equal('Warp');
+      });
+    });
+
+    context('when updating a previously added value', function() {
+      var aggregator = new ModificationAggregator(doc);
+
+      before(function(done) {
+        aggregator.add('loc', 'London', function() {
+          aggregator.update('loc', 'Brighton', done);
+        });
+      });
+
+      it('adds the set update', function() {
+        expect(aggregator.sets).to.deep.equal({ loc: 'Brighton' });
+      });
+
+      it('updates the current copy', function() {
+        expect(aggregator.current.loc).to.equal('Brighton');
+      });
+
+      it('does not modify the original', function() {
+        expect(aggregator.original.loc).to.equal(undefined);
       });
     });
   });
