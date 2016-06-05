@@ -1,13 +1,13 @@
 {
-  "name": "hadron-modification-aggregator",
-  "description": "Hadron Modification Aggregator",
+  "name": "hadron-change-tracker",
+  "description": "Hadron Change Tracker",
   "author": "Durran Jordan <durran@gmail.com>",
-  "bugs": "https://github.com/mongodb-js/hadron-modification-aggregator/issues",
-  "homepage": "https://github.com/mongodb-js/hadron-modification-aggregator",
+  "bugs": "https://github.com/mongodb-js/hadron-change-tracker/issues",
+  "homepage": "https://github.com/mongodb-js/hadron-change-tracker",
   "version": "0.0.1",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mongodb-js/hadron-modification-aggregator.git"
+    "url": "https://github.com/mongodb-js/hadron-change-tracker.git"
   },
   "license": "Apache-2.0",
   "keywords": [
