@@ -94,6 +94,67 @@ describe('ChangeTracker', function() {
     });
   });
 
+  describe('#get updates', function() {
+    context('when no updates exist', function() {
+      var doc = { _id: 'aphex-twin' };
+      var tracker = new ChangeTracker(doc);
+
+      it('returns an empty object', function() {
+        expect(tracker.updates).to.deep.equal({});
+      });
+    });
+
+    context('when sets exist', function() {
+      var doc = { _id: 'aphex-twin' };
+      var tracker = new ChangeTracker(doc);
+
+      before(function(done) {
+        tracker.update('name', 'Aphex Twin', done);
+      });
+
+      it('returns the updates', function() {
+        expect(tracker.updates).to.deep.equal(
+          { '$set': { name: 'Aphex Twin' }}
+        );
+      });
+    });
+
+    context('when unsets exist', function() {
+      var doc = { _id: 'aphex-twin', name: 'Aphex Twin' };
+      var tracker = new ChangeTracker(doc);
+
+      before(function(done) {
+        tracker.remove('name', done);
+      });
+
+      it('returns the updates', function() {
+        expect(tracker.updates).to.deep.equal(
+          { '$unset': { name: '' }}
+        );
+      });
+    });
+
+    context('when sets and unsets exist', function() {
+      var doc = { _id: 'aphex-twin', name: 'Aphex Twin' };
+      var tracker = new ChangeTracker(doc);
+
+      before(function(done) {
+        tracker.update('label', 'Warp', function() {
+          tracker.remove('name', done);
+        });
+      });
+
+      it('returns the updates', function() {
+        expect(tracker.updates).to.deep.equal(
+          {
+            '$set': { label: 'Warp' },
+            '$unset': { name: '' }
+          }
+        );
+      });
+    });
+  });
+
   describe('#remove', function() {
     context('when the element is in the original document', function() {
       var doc = { _id: 'aphex-twin', name: 'Aphex Twin', label: 'Warp' };
