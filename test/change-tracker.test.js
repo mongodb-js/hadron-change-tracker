@@ -85,6 +85,15 @@ describe('ChangeTracker', function() {
     });
   });
 
+  describe('#get filter', function() {
+    var doc = { _id: 'aphex-twin' };
+    var tracker = new ChangeTracker(doc);
+
+    it('returns the filter with the document _id', function() {
+      expect(tracker.filter).to.deep.equal({ _id: doc._id });
+    });
+  });
+
   describe('#remove', function() {
     context('when the element is in the original document', function() {
       var doc = { _id: 'aphex-twin', name: 'Aphex Twin', label: 'Warp' };
