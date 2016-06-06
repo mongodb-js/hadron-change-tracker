@@ -85,6 +85,25 @@ describe('ChangeTracker', function() {
     });
   });
 
+  describe('#remove', function() {
+    context('when the element is in the original document', function() {
+      var doc = { _id: 'aphex-twin', name: 'Aphex Twin', label: 'Warp' };
+      var tracker = new ChangeTracker(doc);
+
+      before(function(done) {
+        tracker.remove('label', done);
+      });
+
+      it('removes the element from the document', function() {
+        expect(tracker.doc).to.not.have.property('label');
+      });
+
+      it('adds the unset to the update', function() {
+        expect(tracker.unsets).to.deep.equal({ label: '' });
+      });
+    });
+  });
+
   describe('#rename', function() {
     context('when renaming to an element with an existing name', function() {
       var doc = { _id: 'aphex-twin', name: 'Aphex Twin', label: 'Warp' };
