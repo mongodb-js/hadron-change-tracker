@@ -23,40 +23,6 @@ describe('ChangeTracker', function() {
       });
     });
 
-    context('when adding an element with undefined name and value', function() {
-      var doc = { _id: 'aphex-twin', name: 'Aphex Twin', label: 'Warp' };
-      var tracker = new ChangeTracker(doc);
-
-      before(function(done) {
-        tracker.add(undefined, undefined, done);
-      });
-
-      it('does not add the set update', function() {
-        expect(tracker.sets).to.deep.equal({});
-      });
-
-      it('updates the current copy', function() {
-        expect(tracker.doc[undefined]).to.equal(undefined);
-      });
-    });
-
-    context('when adding an element with null name and value', function() {
-      var doc = { _id: 'aphex-twin', name: 'Aphex Twin', label: 'Warp' };
-      var tracker = new ChangeTracker(doc);
-
-      before(function(done) {
-        tracker.add(null, null, done);
-      });
-
-      it('does not add the set update', function() {
-        expect(tracker.sets).to.deep.equal({});
-      });
-
-      it('updates the current copy', function() {
-        expect(tracker.doc[null]).to.equal(null);
-      });
-    });
-
     context('when adding an element with an existing name', function() {
       context('when the existing name is in the original', function() {
         var doc = { _id: 'aphex-twin', name: 'Aphex Twin', label: 'Warp' };

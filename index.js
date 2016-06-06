@@ -1,1 +1,1 @@
-module.exports = require('./lib/modification-aggregator');
+module.exports = require('./lib/change-tracker');
