@@ -102,6 +102,29 @@ describe('ChangeTracker', function() {
         expect(tracker.unsets).to.deep.equal({ label: '' });
       });
     });
+
+    context('when removing an element that was added', function() {
+      var doc = { _id: 'aphex-twin', name: 'Aphex Twin' };
+      var tracker = new ChangeTracker(doc);
+
+      before(function(done) {
+        tracker.update('label', 'Warp', function() {
+          tracker.remove('label', done);
+        });
+      });
+
+      it('removes the element from the document', function() {
+        expect(tracker.doc).to.not.have.property('label');
+      });
+
+      it('does not add an unset to the update', function() {
+        expect(tracker.unsets).to.deep.equal({});
+      });
+
+      it('does not add a set to the update', function() {
+        expect(tracker.sets).to.deep.equal({});
+      });
+    });
   });
 
   describe('#rename', function() {
