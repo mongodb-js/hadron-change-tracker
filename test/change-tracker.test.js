@@ -23,6 +23,23 @@ describe('ChangeTracker', function() {
       });
     });
 
+    context('when adding an element with empty field and values', function() {
+      var doc = { _id: 'aphex-twin', name: 'Aphex Twin' };
+      var tracker = new ChangeTracker(doc);
+
+      before(function(done) {
+        tracker.add('', '', done);
+      });
+
+      it('does not add the set update', function() {
+        expect(tracker.sets).to.deep.equal({});
+      });
+
+      it('updates the current copy', function() {
+        expect(tracker.doc['']).to.equal('');
+      });
+    });
+
     context('when adding an element with an existing name', function() {
       context('when the existing name is in the original', function() {
         var doc = { _id: 'aphex-twin', name: 'Aphex Twin', label: 'Warp' };
@@ -64,6 +81,50 @@ describe('ChangeTracker', function() {
             done();
           });
         });
+      });
+    });
+  });
+
+  describe('#rename', function() {
+    context('when renaming to an element with an existing name', function() {
+      var doc = { _id: 'aphex-twin', name: 'Aphex Twin', label: 'Warp' };
+      var tracker = new ChangeTracker(doc);
+
+      it('sets an error in the callback', function(done) {
+        tracker.rename('', 'name', function(error) {
+          expect(error.message).to.equal('A field with the name "name" already exists.');
+          done();
+        });
+      });
+
+      it('does not add a set to the update', function(done) {
+        tracker.rename('', 'name', function() {
+          expect(tracker.sets).to.deep.equal({});
+          done();
+        });
+      });
+    });
+
+    context('when the element does not yet exist', function() {
+      var doc = { _id: 'aphex-twin', name: 'Aphex Twin' };
+      var tracker = new ChangeTracker(doc);
+
+      before(function(done) {
+        tracker.add('', '', function() {
+          tracker.rename('', 'label', done);
+        });
+      });
+
+      it('adds the set update', function() {
+        expect(tracker.sets).to.deep.equal({ label: '' });
+      });
+
+      it('updates the current copy', function() {
+        expect(tracker.doc.label).to.equal('');
+      });
+
+      it('removes the old field from the document', function() {
+        expect(tracker.doc).to.not.have.property('');
       });
     });
   });
