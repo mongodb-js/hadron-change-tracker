@@ -23,7 +23,7 @@
     "check"
   ],
   "dependencies": {
-    "debug": "^2.2.0"
+    "debug": "^2.4.0"
   },
   "devDependencies": {
     "chai": "^3.4.1",
